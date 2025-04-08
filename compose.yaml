@@ -1,9 +1,10 @@
 services:
   postgres:
     image: 'postgres:latest'
+    volumes:
+      - ~/volumes/airbnb/postgresql/:/var/lib/postgresql/data
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=root
     ports:
-      - '5432'
+      - 127.0.0.1:5433:5432
