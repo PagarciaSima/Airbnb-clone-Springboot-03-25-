@@ -11,8 +11,8 @@
     <property name="datetimeType" value="datetime" dbms="postgresql"/>
     
     <changeSet id="0000" author="you">
-    <sql>CREATE SCHEMA IF NOT EXISTS airbnb_clone</sql>
-</changeSet>
+    	<sql>CREATE SCHEMA IF NOT EXISTS airbnb_clone</sql>
+	</changeSet>
 
     <include file="/db/changelog/00000000000001_user.xml" relativeToChangelogFile="false"/>
     <include file="/db/changelog/00000000000002_listing.xml" relativeToChangelogFile="false"/>
