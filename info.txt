@@ -1,0 +1,57 @@
+// AUTH
+manage.auth0.com
+
+	1. Create regular web app
+	2. Allowed callback urls: http://localhost:8080/login/oauth2/code/okta,http://localhost:4200/login/oauth2/code/okta
+	3. Allowed logout url y origin url: http://localhost:8080,http://localhost:4200
+	4. API / settings / client Id -> marcar como authorized, desplegar en la flecha y seleccionar permisos: 3 primeras filas
+	5. User managemenrt / Roles -> Crear ROLE_ADMIN, ROLE_TENANT, ROLE_LANDLORD
+	6. Branding / universal: poner la url del logo airbnb (wikipedia).
+	  Ir a customization (definir estilos login)
+	7. Actions / trigers / post login trigger / custom + create action. Nombramos la acción Add default role
+	Añadimos el script y ponemos los roles:
+	
+	
+	
+			exports.onExecutePostLogin = async (event, api) => {
+			  const namespace = "https://www.pgs.es"
+			
+			  if(event.authorization && event.authorization.roles && event.authorization.roles.length > 0) {
+			    if (event.authorization) {
+			      // ID Token (Front)
+			      api.idToken.setCustomClaim(`${namespace}/roles`, event.authorization.roles);
+			      // Access Token (Back)
+			      api.accessToken.setCustomClaim(`${namespace}/roles`, event.authorization.roles);
+			    }
+			    return;
+			  }
+			
+			  const ManagementClient = require('auth0').ManagementClient;
+			  const management = new ManagementClient({
+			     domain: event.secrets.DOMAIN,
+			     clientId: event.secrets.CLIENT_ID,
+			     clientSecret: event.secrets.CLIENT_SECRET
+			  });
+			
+			  const params = {id: event.user.user_id}
+			  // TENANT ROLE
+			  const data = {"roles": [event.secrets.TENANT_ROLE_ID] };
+			
+			   try {
+			    // Asigna el rol al usuario
+			    await management.users.assignRoles(params, data);
+			    // Obtiene los roles del usuario
+			    const rolesData = await management.users.getRoles(params);
+			    const roleName = rolesData.data.map(role => role.name);
+			
+			    // ID Token (Front)
+			    api.idToken.setCustomClaim(`${namespace}/roles`, roleName);
+			    // Access Token (Back)
+			    api.accessToken.setCustomClaim(`${namespace}/roles`, roleName);
+			
+			  } catch (e) {
+			    console.log(e);
+			  }
+			};
+		
+	8 Arrastramos al flow el trigger

@@ -39,6 +39,7 @@ public class ListingPicture extends AbstractAuditingEntity<Long>{
 	@Column(name = "file_content_type")
 	private String fileContentType;
 	
+	@Column(name = "is_cover")
 	private boolean isCover;
 
 	public Long getId() {

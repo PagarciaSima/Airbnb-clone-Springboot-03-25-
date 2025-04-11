@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories({
 	"com.airbnb.clone.AirbnbClone.user.repository",
 	"com.airbnb.clone.AirbnbClone.listing.repository",
+	"com.airbnb.clone.AirbnbClone.booking.repository",
+
 })
 @EnableTransactionManagement
 @EnableJpaAuditing
