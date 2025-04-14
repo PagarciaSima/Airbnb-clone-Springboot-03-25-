@@ -1,5 +1,6 @@
 package com.airbnb.clone.AirbnbClone.infrastructure.config;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -15,14 +16,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 import com.airbnb.clone.AirbnbClone.user.domain.Authority;
 import com.airbnb.clone.AirbnbClone.user.domain.User;
-import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 
 public class SecurityUtils {
 
-	private static final String ROLE_LANDLORD = "ROLE_LANDLORD";
-	private static final String ROLE_TENANT = "ROLE_TENANT";
-	private static final String CLAIMS_NAMESPACE = "https://www.pgs.es/roles";
+	public static final String ROLE_LANDLORD = "ROLE_LANDLORD";
+	public static final String ROLE_TENANT = "ROLE_TENANT";
+	public static final String CLAIMS_NAMESPACE = "https://www.pgs.es/roles";
 
+	@SuppressWarnings("unchecked")
 	public static User mapOatuh2AttributesToUser(Map<String, Object> attributes) {
 		User user = new User();
 		String sub = String.valueOf(attributes.get("sub"));
@@ -71,6 +72,7 @@ public class SecurityUtils {
 		return mapRolesToGrantedAuthorities(getRolesFromClaims(claims));
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Collection<String> getRolesFromClaims(Map<String, Object> claims) {
 		return (List<String>) claims.get(CLAIMS_NAMESPACE);
 	}
